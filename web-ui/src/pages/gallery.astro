@@ -1,0 +1,135 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import CodeBlock from "../components/ui/CodeBlock.astro";
+import { agents } from "../data/agents";
+
+const gallery = agents.filter((a) => a.scope === "gallery");
+const copyCmd = `cp -R examples/support-agent my-support-agent
+cp -R examples/research-agent my-research-agent
+cp -R examples/ops-agent my-ops-agent`;
+---
+
+<SiteLayout
+  title="Agent gallery"
+  description="Minimal support, research, and ops/SRE reference agents you can copy."
+>
+  <PageHero
+    eyebrow="Examples"
+    title="Gallery agents"
+    description="Intentionally small: agent.ts, instructions.md, one skill, one tool, and an evals placeholder. The point is copyability — not full production coverage."
+  />
+
+  <section class="section">
+    <div class="container">
+      <CodeBlock code={copyCmd} label="Copy from the gallery" />
+      <div class="callout" style="margin-top: 1rem">
+        <strong>Honest scope:</strong> gallery agents do not yet include
+        subagents, sandbox, custom channels, or real eval suites. Those are
+        demonstrated in <span class="mono">eve-analyst</span>; gallery evals
+        are roadmap Phase 3.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container stack">
+      {
+        gallery.map((agent) => (
+          <article class="card layered agent">
+            <div class="agent-head">
+              <div>
+                <p class="eyebrow">{agent.role}</p>
+                <h2 class="mono">{agent.name}</h2>
+                <p class="path mono">{agent.path}</p>
+              </div>
+            </div>
+            <p>{agent.summary}</p>
+            <SectionHeader title="Primitives" />
+            <ul class="chip-row">
+              {agent.primitives.map((p) => (
+                <li class="chip">{p}</li>
+              ))}
+            </ul>
+            <SectionHeader title="Demo prompts" />
+            <ul class="prompts">
+              {agent.prompts.map((p) => (
+                <li class="mono">“{p}”</li>
+              ))}
+            </ul>
+            <CodeBlock code={agent.demoCommand} label="Run" />
+            <ul class="notes">
+              {agent.notes.map((n) => (
+                <li>{n}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .stack {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .agent h2 {
+    margin: 0.2rem 0 0.35rem;
+    font-size: 1.55rem;
+    color: var(--syrah-deep);
+  }
+
+  .path {
+    margin: 0;
+    color: var(--syrah);
+    font-size: 0.9rem;
+  }
+
+  .agent > p {
+    color: var(--ink-muted);
+  }
+
+  .chip-row {
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .chip {
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--blue-glow) 30%, white);
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+
+  .prompts {
+    margin: 0 0 1rem;
+    padding-left: 1.1rem;
+    color: var(--syrah-deep);
+  }
+
+  .notes {
+    margin: 1rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+  }
+
+  .agent :global(.section-header) {
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  .agent :global(.section-header h2) {
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>

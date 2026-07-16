@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://anthonyjohn17.github.io/eve-agent-harness/sitemap.xml

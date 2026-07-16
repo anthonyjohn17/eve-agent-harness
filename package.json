@@ -8,6 +8,8 @@
     "demo:analyst": "pnpm --dir eve-analyst install && pnpm --dir eve-analyst dev",
     "demo:support": "pnpm --dir examples/support-agent install && pnpm --dir examples/support-agent dev",
     "demo:research": "pnpm --dir examples/research-agent install && pnpm --dir examples/research-agent dev",
-    "demo:ops": "pnpm --dir examples/ops-agent install && pnpm --dir examples/ops-agent dev"
+    "demo:ops": "pnpm --dir examples/ops-agent install && pnpm --dir examples/ops-agent dev",
+    "demo:web-ui": "pnpm --dir web-ui install && pnpm --dir web-ui dev",
+    "build:web-ui": "pnpm --dir web-ui install && pnpm --dir web-ui build"
   }
 }

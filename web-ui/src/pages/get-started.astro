@@ -1,0 +1,171 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import CodeBlock from "../components/ui/CodeBlock.astro";
+import { quickStarts, requirements } from "../data/safety";
+import { site } from "../data/site";
+---
+
+<SiteLayout
+  title="Get started"
+  description="Install, demo, scaffold, validate, and deploy Eve Agent Harness agents."
+>
+  <PageHero
+    eyebrow="Quick starts"
+    title="Get started"
+    description="Node 24+, pnpm, and an Anthropic API key for model-backed demos. Three application paths plus a contributor path for the framework."
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Requirements" />
+      <ul class="chip-row">
+        {requirements.map((r) => <li class="chip">{r}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container stack">
+      <article class="card">
+        <h2>A — Run the flagship analyst</h2>
+        <p>Installs eve-analyst deps and starts the eve dev TUI.</p>
+        <CodeBlock code={quickStarts.analyst} label="Demo analyst" />
+      </article>
+
+      <article class="card">
+        <h2>B — Copy a gallery agent</h2>
+        <p>Smallest path to a custom domain agent.</p>
+        <CodeBlock code={quickStarts.gallery} label="Gallery copy" />
+      </article>
+
+      <article class="card">
+        <h2>C — Scaffold with the published CLI</h2>
+        <p>Uses the published <span class="mono">eve</span> npm package.</p>
+        <CodeBlock code={quickStarts.scaffold} label="eve init" />
+      </article>
+
+      <article class="card">
+        <h2>Contributor — work on the framework</h2>
+        <p>
+          Inside <span class="mono">eve/</span>: build, watch with the
+          weather-agent fixture, and run unit tests for fast feedback.
+        </p>
+        <CodeBlock code={quickStarts.framework} label="Framework loop" />
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Validate before you ship"
+        description="Evals are a manual CI gate — not automatic on eve deploy."
+      />
+      <div class="grid-2">
+        <div>
+          <h3>Analyst</h3>
+          <CodeBlock code={quickStarts.validateAnalyst} label="Analyst checks" />
+        </div>
+        <div>
+          <h3>Framework</h3>
+          <CodeBlock
+            code={quickStarts.validateFramework}
+            label="Framework checks"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Deploy" />
+      <div class="grid-2">
+        <article class="card layered">
+          <h3>Self-host</h3>
+          <CodeBlock code={quickStarts.selfHost} label="Local host" />
+        </article>
+        <article class="card layered">
+          <h3>Vercel</h3>
+          <CodeBlock code={quickStarts.deploy} label="Vercel deploy" />
+        </article>
+      </div>
+      <div class="callout warning" style="margin-top: 1.25rem">
+        <strong>Before production:</strong> remove demo <span class="mono">none()</span>
+        auth, set sandbox <span class="mono">networkPolicy: "deny-all"</span>,
+        add tool approvals, and run <span class="mono">eve eval --strict</span>
+        in CI. See the Safety page.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <SectionHeader title="Source of truth" />
+      <ol>
+        <li>
+          Installed package docs: <span class="mono">node_modules/eve/docs/</span>
+        </li>
+        <li>
+          Framework source docs: <span class="mono">eve/docs/</span> or
+          <a href={site.docs.eve} rel="noopener noreferrer">eve.dev/docs</a>
+        </li>
+        <li>
+          Distribution specs: <span class="mono">docs/FRAMEWORK_SPEC.md</span>,
+          <span class="mono">docs/AGENT_CONVENTION.md</span>
+        </li>
+        <li>
+          Coding agents: <span class="mono">AGENTS.md</span>,
+          <span class="mono">skills/eve-agent-harness/SKILL.md</span>
+        </li>
+      </ol>
+      <p>
+        Note: there is no pnpm workspace linking <span class="mono">eve-analyst</span>
+        to the local <span class="mono">eve/</span> package yet — analyst depends
+        on the published npm package unless you deliberately link a local build.
+      </p>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .chip-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: white;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .card h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.25rem;
+    color: var(--syrah-deep);
+  }
+
+  .card > p {
+    margin: 0 0 1rem;
+    color: var(--ink-muted);
+  }
+
+  h3 {
+    margin: 0 0 0.75rem;
+    color: var(--syrah-deep);
+  }
+</style>

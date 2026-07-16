@@ -1,0 +1,58 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { primaryNav, site } from "../data/site";
+
+const base = import.meta.env.BASE_URL;
+function withBase(path: string) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (base === "/") return normalized;
+  return `${base.replace(/\/$/, "")}${normalized}`;
+}
+---
+
+<SiteLayout title="Not found" description="Page not found.">
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Page not found</h1>
+      <p class="lede">
+        That route is not part of the {site.name} site. Try one of these:
+      </p>
+      <ul class="links">
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a href={withBase(item.href)}>{item.label}</a>
+              {item.description && <span> — {item.description}</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  h1 {
+    margin: 0 0 0.75rem;
+    color: var(--syrah-deep);
+    letter-spacing: -0.03em;
+  }
+
+  .lede {
+    color: var(--ink-muted);
+    max-width: 36rem;
+  }
+
+  .links {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .links span {
+    color: var(--ink-faint);
+  }
+</style>

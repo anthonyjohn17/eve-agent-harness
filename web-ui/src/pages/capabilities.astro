@@ -1,0 +1,194 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import StatusBadge from "../components/ui/StatusBadge.astro";
+import {
+  builtInTools,
+  capabilities,
+  channels,
+  cliCommands,
+} from "../data/capabilities";
+---
+
+<SiteLayout
+  title="Capabilities"
+  description="Complete capability surface of Eve Agent Harness and the eve framework."
+>
+  <PageHero
+    eyebrow="Primitive surface"
+    title="Everything the folder can express"
+    description="Tools, skills, channels, connections, sandbox, subagents, schedules, hooks, extensions, evals, CLI, and deploy paths — with honest status labels."
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Capability matrix" />
+      <div class="cap-list">
+        {
+          capabilities.map((cap) => (
+            <article class="card cap">
+              <div class="cap-head">
+                <h3>{cap.name}</h3>
+                <StatusBadge status={cap.status} />
+              </div>
+              <p class="summary">{cap.summary}</p>
+              <p>{cap.details}</p>
+              <dl class="meta">
+                {cap.slot && (
+                  <>
+                    <dt>Slot</dt>
+                    <dd class="mono">{cap.slot}</dd>
+                  </>
+                )}
+                {cap.helper && (
+                  <>
+                    <dt>Helper</dt>
+                    <dd class="mono">{cap.helper}</dd>
+                  </>
+                )}
+              </dl>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Channels"
+        description="Platform ingress/egress adapters. Root-only slot under agent/channels/."
+      />
+      <div class="grid-3">
+        {
+          channels.map((ch) => (
+            <article class="card">
+              <h3>{ch.name}</h3>
+              <p>{ch.note}</p>
+              <p class="mono muted">{ch.id}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Default harness tools"
+        description="Built-in tools available unless overridden or disabled by the same slug."
+      />
+      <ul class="chip-row">
+        {builtInTools.map((t) => <li class="chip mono">{t}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="CLI"
+        description="Recommended loop: edit → eve info → eve dev → eve build → eve start / eve deploy."
+      />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              cliCommands.map((row) => (
+                <tr>
+                  <td class="mono">{row.cmd}</td>
+                  <td>{row.purpose}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warning" style="margin-top: 1.25rem">
+        <strong>Evals are a CI gate.</strong>{" "}
+        <span class="mono">eve eval --strict</span> is not auto-wired into
+        <span class="mono"> eve deploy</span>. Wire it in CI before shipping.
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .cap-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .cap-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .cap h3 {
+    margin: 0;
+  }
+
+  .summary {
+    margin: 0 0 0.5rem !important;
+    color: var(--ink) !important;
+    font-weight: 500;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.85rem;
+    margin: 0.85rem 0 0;
+    font-size: 0.9rem;
+  }
+
+  .meta dt {
+    color: var(--ink-faint);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    align-self: center;
+  }
+
+  .meta dd {
+    margin: 0;
+    color: var(--syrah);
+  }
+
+  .muted {
+    margin-top: 0.65rem;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+  }
+
+  .chip-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: white;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--syrah-deep);
+  }
+</style>

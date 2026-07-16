@@ -14,12 +14,15 @@ A two-part workspace:
 | `eve/` | Framework monorepo: CLI, runtime, docs, fixtures, e2e |
 | `eve-analyst/` | Reference data analyst agent that consumes the `eve` package |
 | `examples/` | Small reference agents: support, research, ops/SRE |
+| `web-ui/` | Static Astro marketing/docs site for this distribution (GitHub Pages) |
 | `docs/` | Product spec and agent-folder convention |
 | `skills/eve-agent-harness/SKILL.md` | Skill-style instructions for coding agents |
 | `Eve-AI-Agent-Framework.md` | Background research notes — **not** authoritative |
 
-There is no pnpm workspace linking the two trees yet. `eve-analyst` depends on
+There is no pnpm workspace linking these trees yet. `eve-analyst` depends on
 the published `eve` npm package unless you deliberately link a local build.
+`web-ui/` has its own `package.json`/lockfile and pulls no code from `eve/` or
+`eve-analyst/` — it is a content site, not a running agent.
 
 ## Source of truth
 
@@ -121,6 +124,14 @@ pnpm docs:check
 Do not run the full scenario/e2e matrix after every docs-only change. Prefer
 the narrowest relevant check.
 
+### Website (`web-ui/`)
+
+```sh
+pnpm demo:web-ui          # or: cd web-ui && pnpm install && pnpm dev
+pnpm build:web-ui         # astro check && astro build -> web-ui/dist/
+cd web-ui && pnpm check   # astro check only
+```
+
 ## Framework code principles
 
 When changing `eve/packages/eve`:
@@ -146,3 +157,6 @@ See also `eve/AGENTS.md` for framework-specific invariants and test tiers.
 - Do not claim ownership of the upstream npm `eve` package namespace without a deliberate publish plan.
 - Do not delete `LICENSE` / `NOTICE` or strip Apache-2.0 provenance.
 - Do not invent features in docs that are not implemented — mark roadmap items clearly.
+- Keep `web-ui/src/data/*.ts` claims (capabilities, agents, safety) in sync with
+  this repo's actual status — the site is generated content, not a separate
+  source of truth.

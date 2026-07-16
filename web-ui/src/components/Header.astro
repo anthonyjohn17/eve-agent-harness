@@ -1,0 +1,240 @@
+---
+import { primaryNav, site } from "../data/site";
+
+const pathname = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
+
+function withBase(path: string) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (base === "/") return normalized;
+  return `${base.replace(/\/$/, "")}${normalized}`;
+}
+
+function isActive(href: string) {
+  const target = withBase(href);
+  if (href === "/") {
+    return pathname === target || pathname === `${base}` || pathname === `${base.replace(/\/$/, "")}/`;
+  }
+  return pathname === target || pathname.startsWith(target);
+}
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={withBase("/")}>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <span class="brand-name">{site.name}</span>
+        <span class="brand-sub">filesystem-first agents</span>
+      </span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-nav-toggle
+    >
+      <span class="sr-only">Menu</span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" data-nav aria-label="Primary">
+      <ul>
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a
+                href={withBase(item.href)}
+                class:list={[{ active: isActive(item.href) }]}
+                aria-current={isActive(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn-primary nav-cta" href={site.repo.url} rel="noopener noreferrer">
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--bit-of-blue) 82%, white);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 2rem;
+    height: 2.35rem;
+    border-radius: 55% 55% 60% 60% / 40% 40% 70% 70%;
+    background:
+      radial-gradient(
+        circle at 50% 35%,
+        var(--blue-glow) 0 38%,
+        transparent 40%
+      ),
+      linear-gradient(180deg, var(--syrah-soft), var(--syrah-deep));
+    box-shadow: inset 0 -6px 10px color-mix(in srgb, black 20%, transparent);
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .brand-name {
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--syrah-deep);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brand-sub {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    text-decoration: none;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.65rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .site-nav a:hover,
+  .site-nav a.active {
+    color: var(--syrah);
+    background: color-mix(in srgb, var(--syrah) 8%, white);
+  }
+
+  .nav-cta {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .nav-toggle {
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    padding: 0.55rem;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .nav-toggle span:not(.sr-only) {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--syrah);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 980px) {
+    .nav-toggle {
+      display: inline-flex;
+    }
+
+    .site-nav {
+      position: absolute;
+      top: calc(var(--header-h) + 0.5rem);
+      right: var(--gutter);
+      left: var(--gutter);
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .site-nav.open {
+      display: flex;
+    }
+
+    .site-nav ul {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .site-nav a {
+      display: block;
+      padding: 0.7rem 0.85rem;
+    }
+
+    .nav-cta {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector("[data-nav-toggle]");
+  const nav = document.querySelector("[data-nav]");
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+</script>

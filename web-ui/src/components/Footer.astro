@@ -1,0 +1,127 @@
+---
+import { site } from "../data/site";
+
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL;
+
+function withBase(path: string) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (base === "/") return normalized;
+  return `${base.replace(/\/$/, "")}${normalized}`;
+}
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-brand">{site.name}</p>
+      <p class="footer-copy">
+        {site.tagline} Maintained by
+        <a href={site.maintainer.url} rel="noopener noreferrer">{site.maintainer.name}</a>.
+        Framework name is always <span class="mono">eve</span>.
+      </p>
+    </div>
+    <div>
+      <p class="footer-label">Explore</p>
+      <ul>
+        <li><a href={withBase("/how-it-works/")}>How it works</a></li>
+        <li><a href={withBase("/capabilities/")}>Capabilities</a></li>
+        <li><a href={withBase("/eve-analyst/")}>eve-analyst</a></li>
+        <li><a href={withBase("/get-started/")}>Get started</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-label">References</p>
+      <ul>
+        <li><a href={site.repo.url} rel="noopener noreferrer">GitHub</a></li>
+        <li><a href={site.docs.eve} rel="noopener noreferrer">eve.dev/docs</a></li>
+        <li><a href={site.docs.npm} rel="noopener noreferrer">npm eve</a></li>
+        <li><a href={withBase("/safety-roadmap/")}>Safety & roadmap</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>
+      © {year} {site.maintainer.name}. {site.license}. See LICENSE and NOTICE for
+      Apache-2.0 provenance and upstream eve attribution.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 3rem;
+    padding: 2.5rem 0 1.5rem;
+    border-top: 1px solid var(--border);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--blue-glow) 18%, transparent),
+        color-mix(in srgb, var(--syrah) 6%, var(--bit-of-blue))
+      );
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: 1.4fr 1fr 1fr;
+  }
+
+  .footer-brand {
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+    color: var(--syrah-deep);
+  }
+
+  .footer-copy {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    max-width: 28rem;
+  }
+
+  .footer-label {
+    margin: 0 0 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--syrah);
+  }
+
+  .site-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .site-footer a {
+    text-decoration: none;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+  }
+
+  .site-footer a:hover {
+    color: var(--syrah);
+  }
+
+  .footer-bottom {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  }
+
+  .footer-bottom p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 800px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

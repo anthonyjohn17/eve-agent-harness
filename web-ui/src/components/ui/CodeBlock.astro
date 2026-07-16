@@ -1,0 +1,100 @@
+---
+interface Props {
+  code: string;
+  label?: string;
+  language?: string;
+}
+
+const { code, label = "Command", language = "bash" } = Astro.props;
+const id = `code-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class="code-block" data-code-block>
+  <div class="code-toolbar">
+    <span class="code-label">{label}</span>
+    <button type="button" class="copy-btn" data-copy aria-describedby={id}>
+      Copy
+    </button>
+  </div>
+  <pre id={id}><code class={`language-${language}`}>{code.trimEnd()}</code></pre>
+</div>
+
+<style>
+  .code-block {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--syrah-deep);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.85rem;
+    background: color-mix(in srgb, black 25%, var(--syrah));
+    border-bottom: 1px solid color-mix(in srgb, white 12%, transparent);
+  }
+
+  .code-label {
+    color: color-mix(in srgb, white 75%, var(--blue-glow));
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .copy-btn {
+    border: 1px solid color-mix(in srgb, white 25%, transparent);
+    background: color-mix(in srgb, white 10%, transparent);
+    color: white;
+    border-radius: var(--radius-pill);
+    padding: 0.25rem 0.7rem;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover,
+  .copy-btn[data-copied="true"] {
+    background: color-mix(in srgb, var(--blue-glow) 35%, transparent);
+  }
+
+  pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    color: #f4f7f8;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  code {
+    font-family: inherit;
+  }
+</style>
+
+<script>
+  document.querySelectorAll("[data-code-block]").forEach((block) => {
+    const btn = block.querySelector("[data-copy]");
+    const code = block.querySelector("code");
+    if (!btn || !code) return;
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? "");
+        btn.setAttribute("data-copied", "true");
+        btn.textContent = "Copied";
+        setTimeout(() => {
+          btn.removeAttribute("data-copied");
+          btn.textContent = "Copy";
+        }, 1600);
+      } catch {
+        btn.textContent = "Failed";
+      }
+    });
+  });
+</script>

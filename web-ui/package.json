@@ -1,0 +1,33 @@
+{
+  "name": "eve-agent-harness-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Static product site for Eve Agent Harness (GitHub Pages).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "pnpm build && gh-pages -d dist -b gh-pages"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.2.1",
+    "@fontsource/dm-sans": "^5.2.5",
+    "@fontsource/jetbrains-mono": "^5.2.5",
+    "astro": "^5.7.10",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "gh-pages": "^6.3.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.7.0"
+}

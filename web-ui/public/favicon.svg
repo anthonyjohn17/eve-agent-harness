@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" role="img" aria-label="Eve Agent Harness">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8a3a3f"/>
+      <stop offset="100%" stop-color="#4a1c1f"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#g)" d="M32 4c11 0 22 8 22 22 0 18-14 32-22 50C24 58 10 44 10 26 10 12 21 4 32 4z"/>
+  <ellipse cx="32" cy="28" rx="11" ry="14" fill="#b2d4dd"/>
+</svg>

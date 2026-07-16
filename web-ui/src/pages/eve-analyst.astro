@@ -1,0 +1,205 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import CodeBlock from "../components/ui/CodeBlock.astro";
+import AnalystDemo from "../components/demo/AnalystDemo";
+import {
+  agents,
+  analystDataset,
+  analystEvals,
+} from "../data/agents";
+import { quickStarts } from "../data/safety";
+
+const analyst = agents.find((a) => a.id === "eve-analyst")!;
+
+const approvalSnippet = `approval: ({ toolInput }) => {
+  const sql = typeof toolInput?.sql === "string" ? toolInput.sql : "";
+  const guard = isReadOnlySelect(sql);
+  if (!guard.ok) return "not-applicable";
+  return looksExpensive(sql) ? "user-approval" : "not-applicable";
+},`;
+
+const sandboxSnippet = `export default defineSandbox({
+  backend: defaultBackend({
+    docker: { networkPolicy: "deny-all" },
+    vercel: { networkPolicy: "deny-all" },
+    microsandbox: { networkPolicy: "deny-all" },
+  }),
+});`;
+
+const authSnippet = `export default eveChannel({
+  auth: [vercelOidc(), localDev(), none()],
+});`;
+---
+
+<SiteLayout
+  title="eve-analyst"
+  description="Flagship reference data analyst agent — SQL, skills, HITL, sandbox, subagent, channels, and evals."
+>
+  <PageHero
+    eyebrow="Flagship reference"
+    title="eve-analyst"
+    description={analyst.summary}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#demo">Simulated walkthrough</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <CodeBlock code={quickStarts.analyst} label="Run locally" />
+      <div class="callout warning" style="margin-top: 1rem">
+        <strong>Demo auth warning:</strong> the HTTP channel includes
+        <span class="mono">none()</span> for the public demo. Remove it before
+        any real deployment.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="What it proves"
+        description="A complete production-shaped agent that still runs offline on an in-memory warehouse."
+      />
+      <ul class="chip-row">
+        {analyst.primitives.map((p) => <li class="chip">{p}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="In-memory warehouse" />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              analystDataset.map((row) => (
+                <tr>
+                  <td class="mono">{row.table}</td>
+                  <td>{row.detail}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <ul class="notes">
+        {analyst.notes.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="demo">
+    <div class="container">
+      <SectionHeader
+        title="Simulated walkthrough"
+        description="Deterministic client-only demo — not a live model session."
+      />
+      <AnalystDemo client:load />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Try these prompts live" />
+      <div class="grid-2">
+        {
+          analyst.prompts.map((prompt) => (
+            <article class="card">
+              <p class="mono prompt">“{prompt}”</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Key implementation patterns"
+        description="Snippets from the reference agent — drop files; keep agent.ts small."
+      />
+      <div class="stack">
+        <CodeBlock code={approvalSnippet} label="HITL on expensive SQL" language="ts" />
+        <CodeBlock code={sandboxSnippet} label="deny-all sandbox network" language="ts" />
+        <CodeBlock code={authSnippet} label="HTTP channel auth stack (demo)" language="ts" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Eval suite"
+        description="Sibling of agent/. Run with pnpm exec eve eval --strict (needs ANTHROPIC_API_KEY)."
+      />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Eval</th>
+              <th>Asserts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              analystEvals.map((row) => (
+                <tr>
+                  <td class="mono">{row.file}</td>
+                  <td>{row.asserts}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .chip-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radius-pill);
+    background: white;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--syrah-deep);
+  }
+
+  .notes {
+    margin: 1rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--ink-muted);
+  }
+
+  .prompt {
+    margin: 0;
+    color: var(--syrah-deep);
+  }
+
+  .stack {
+    display: grid;
+    gap: 1rem;
+  }
+</style>

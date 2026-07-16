@@ -1,0 +1,166 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import ArchitectureDiagram from "../components/ui/ArchitectureDiagram.astro";
+import CodeBlock from "../components/ui/CodeBlock.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import { site } from "../data/site";
+
+const tinyAgent = `import { defineAgent } from "eve";
+import { anthropic } from "@ai-sdk/anthropic";
+
+export default defineAgent({
+  model: anthropic("claude-sonnet-5"),
+});`;
+
+const otherSdk = `// Other frameworks: register everything by hand
+const agent = new Agent({
+  tools: [listTables, describeTable, runSql, runAnalysis],
+  skills: [revenueRules],
+  subagents: [investigator],
+});`;
+---
+
+<SiteLayout
+  title="How it works"
+  description="Discovery, compilation, durable runtime, and deployment paths for Eve Agent Harness."
+>
+  <PageHero
+    eyebrow="Architecture"
+    title="From folder tree to durable runtime"
+    description="eve discovers authored slots under agent/, compiles inspectable .eve/ artifacts, then hosts them on Nitro with a Workflow-backed session/turn/step model."
+  />
+
+  <section class="section">
+    <div class="container">
+      <ArchitectureDiagram />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="The compiler contrast"
+        description="agent.ts stays tiny. Capabilities are files — discovery and compilation do the wiring."
+      />
+      <div class="grid-2">
+        <div>
+          <CodeBlock code={otherSdk} label="Typical SDK wiring" language="ts" />
+        </div>
+        <div>
+          <CodeBlock code={tinyAgent} label="eve agent.ts" language="ts" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <SectionHeader title="Pipeline stages" />
+      <div class="grid-2">
+        <article class="card">
+          <h3>1. Discover</h3>
+          <p>
+            Walk <span class="mono">agent/</span> without importing authored
+            modules first. Collect tools, skills, channels, connections,
+            schedules, hooks, sandbox, subagents, and emit diagnostics.
+          </p>
+        </article>
+        <article class="card">
+          <h3>2. Compile</h3>
+          <p>
+            Normalize definitions into <span class="mono">.eve/</span> manifests
+            and a module map. Inspectable artifacts make the agent surface
+            debuggable like any other build output.
+          </p>
+        </article>
+        <article class="card">
+          <h3>3. Host</h3>
+          <p>
+            Nitro serves the agent. HTTP protocol lives under
+            <span class="mono">/eve/v1/*</span> — health, info, session create,
+            stream, and cancel.
+          </p>
+        </article>
+        <article class="card">
+          <h3>4. Execute durably</h3>
+          <p>
+            Sessions nest turns and steps. The tool-loop harness handles
+            compaction, HITL parking, dynamic skills/tools, and emissions.
+            Approvals survive restarts.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Convention rules that matter"
+        description="From docs/AGENT_CONVENTION.md — the folder grammar coding agents should follow."
+      />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>An agent is a directory under <span class="mono">agent/</span></td>
+              <td>Path is the unit of authorship and review</td>
+            </tr>
+            <tr>
+              <td>Identity comes from the path</td>
+              <td>Do not add redundant <span class="mono">name</span> / <span class="mono">id</span> on define* calls</td>
+            </tr>
+            <tr>
+              <td>Evals live beside <span class="mono">agent/</span></td>
+              <td><span class="mono">evals/</span> is a sibling, not nested inside agent</td>
+            </tr>
+            <tr>
+              <td>Drop a file to add a capability</td>
+              <td>No manual registration in <span class="mono">agent.ts</span></td>
+            </tr>
+            <tr>
+              <td>Subagents are nested packages</td>
+              <td>They do not inherit parent tools/skills</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Deploy paths" />
+      <div class="grid-2">
+        <article class="card layered">
+          <h3>Vercel</h3>
+          <p><span class="mono">eve link</span> then <span class="mono">eve deploy</span> (or <span class="mono">vercel deploy --prod</span>).</p>
+        </article>
+        <article class="card layered">
+          <h3>Self-host</h3>
+          <p><span class="mono">eve build</span> then <span class="mono">PORT=3000 eve start</span> — Nitro Node output with a local Workflow world.</p>
+        </article>
+      </div>
+      <p class="footer-note">
+        Deep reference: <a href={site.docs.eve} rel="noopener noreferrer">eve.dev/docs</a>
+        · distribution specs in <span class="mono">docs/FRAMEWORK_SPEC.md</span>
+        and <span class="mono">docs/AGENT_CONVENTION.md</span>.
+      </p>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .footer-note {
+    margin: 1.25rem 0 0;
+    color: var(--ink-faint);
+    font-size: 0.92rem;
+  }
+</style>

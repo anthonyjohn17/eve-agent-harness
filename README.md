@@ -106,6 +106,7 @@ Full walkthrough: [`eve-analyst/README.md`](./eve-analyst/README.md).
 | [`eve/`](./eve/)                                           | Framework monorepo — publishable `eve` package, CLI, docs, e2e fixtures |
 | [`eve-analyst/`](./eve-analyst/)                           | Flagship reference agent — production-shaped data analyst               |
 | [`examples/`](./examples/)                                 | Small support, research, and ops/SRE reference agents                   |
+| [`web-ui/`](./web-ui/)                                     | Static marketing/docs site (Astro) for this distribution, deployed to GitHub Pages |
 | [`docs/`](./docs/)                                         | Product + convention specs for this distribution                        |
 | [`eve-ai-agent-frameowrk.md`](./eve-ai-agent-framework.md) | Background research notes (non-authoritative)                           |
 | [`AGENTS.md`](./AGENTS.md)                                 | Guidance for coding agents working in this repo                         |
@@ -148,6 +149,36 @@ for other domains.
 
 Each gallery agent is intentionally small: `agent.ts`, `instructions.md`,
 one skill, one tool, and an `evals/` placeholder. The point is copyability.
+
+---
+
+## Website
+
+[`web-ui/`](./web-ui/) is a static, multi-page marketing and docs site for
+this distribution, built with [Astro](https://astro.build) and a Syrah /
+Blue Glow palette (see [`web-ui/README.md`](./web-ui/README.md)). It has its
+own `package.json` and lockfile — it is not part of a root pnpm workspace.
+
+Pages: home, how it works, capabilities, `eve-analyst`, gallery, get started,
+safety & roadmap. The in-browser analyst demo on the site is a **deterministic
+simulation** — it does not call a live model or backend. Content is sourced
+from typed data modules under `web-ui/src/data/` so site claims stay in sync
+with this README and the repo specs.
+
+```bash
+# Develop (no ANTHROPIC_API_KEY needed — the site has no live model calls)
+pnpm demo:web-ui
+# or: cd web-ui && pnpm install && pnpm dev
+
+# Build static output to web-ui/dist/
+pnpm build:web-ui
+```
+
+By default the site builds for a GitHub Pages project site at
+`/eve-agent-harness/`. Override for a custom domain or root site with
+`SITE_BASE=/ SITE_URL=https://example.com pnpm build:web-ui`. Deploy with
+`pnpm --dir web-ui deploy` (runs `astro check`, builds, and publishes the
+`gh-pages` branch via the `gh-pages` package).
 
 ---
 
@@ -232,7 +263,9 @@ cd eve && pnpm lint && pnpm typecheck && pnpm test:unit
 ## Roadmap
 
 1. **Unify CI** at the harness root; wire `eve-analyst` and examples to the local `eve/` package.
-2. **Production templates** — auth, warehouse adapter, schedules, durable glossary state, web UI.
+2. **Production templates** — auth, warehouse adapter, schedules, durable
+   glossary state, and an interactive agent web UI (chat/ops console — distinct
+   from the static marketing site in [`web-ui/`](./web-ui/)).
 3. **Eval coverage for the gallery** — promote the example eval placeholders into real eval suites.
 4. **Self-host polish** — documented Docker + Postgres workflow world; release automation under this repo's package/container namespaces.
 

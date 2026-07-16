@@ -1,0 +1,15 @@
+---
+interface Props {
+  status: "implemented" | "roadmap" | "demo-caveat";
+}
+
+const labels = {
+  implemented: "Implemented",
+  roadmap: "Roadmap",
+  "demo-caveat": "Demo caveat",
+} as const;
+
+const { status } = Astro.props;
+---
+
+<span class={`badge badge-${status}`}>{labels[status]}</span>

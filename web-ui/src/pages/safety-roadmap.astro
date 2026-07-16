@@ -1,0 +1,176 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import {
+  doNotClaim,
+  roadmap,
+  safetyItems,
+} from "../data/safety";
+import { site } from "../data/site";
+---
+
+<SiteLayout
+  title="Safety & roadmap"
+  description="Production defaults, claims to avoid, roadmap phases, and Apache-2.0 provenance for Eve Agent Harness."
+>
+  <PageHero
+    eyebrow="Responsible use"
+    title="Safety, honesty, and roadmap"
+    description="Preview-quality software with permissive defaults. Configure auth, approvals, and sandbox network explicitly. Distinguish implemented features from roadmap work."
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Safety defaults"
+        description="Disclose these whenever you demo or deploy."
+      />
+      <div class="stack">
+        {
+          safetyItems.map((item) => (
+            <article class={`card safety ${item.severity}`}>
+              <div class="safety-head">
+                <h3>{item.title}</h3>
+                <span class="sev">{item.severity}</span>
+              </div>
+              <p>{item.detail}</p>
+              <p class="mitigation">
+                <strong>Mitigation:</strong> {item.mitigation}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Do not overclaim"
+        description="Authoritative corrections from the distribution specs and README."
+      />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Do not claim</th>
+              <th>Truth</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              doNotClaim.map((row) => (
+                <tr>
+                  <td>{row.claim}</td>
+                  <td>{row.truth}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader title="Roadmap" />
+      <div class="grid-2">
+        {
+          roadmap.map((phase) => (
+            <article class="card layered">
+              <p class="eyebrow">Phase {phase.phase}</p>
+              <h3>{phase.title}</h3>
+              <ul>
+                {phase.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <SectionHeader title="Attribution & license" />
+      <p>
+        <strong>{site.name}</strong> is maintained by
+        <a href={site.maintainer.url} rel="noopener noreferrer">{site.maintainer.name}</a>.
+        License: <strong>{site.license}</strong>.
+      </p>
+      <p>
+        The <span class="mono">eve/</span> framework tree is derived from the
+        upstream open-source eve project (Apache-2.0). Preserve
+        <span class="mono">LICENSE</span> and <span class="mono">NOTICE</span>.
+        Vercel is named only as a platform, deployment target, package, or
+        upstream source — not as the owner of this distribution.
+      </p>
+      <p>
+        Upstream docs and package:
+        <a href={site.docs.eve} rel="noopener noreferrer">eve.dev/docs</a> ·
+        <a href={site.docs.npm} rel="noopener noreferrer">npm eve</a> ·
+        <a href={site.repo.url} rel="noopener noreferrer">{site.repo.label}</a>.
+      </p>
+      <p class="callout">{site.versionNote}</p>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .stack {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .safety-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .safety h3 {
+    margin: 0;
+  }
+
+  .sev {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+  }
+
+  .critical .sev {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, white);
+  }
+
+  .important .sev {
+    color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 12%, white);
+  }
+
+  .note .sev {
+    color: var(--ink-muted);
+    background: var(--bg-tint);
+  }
+
+  .mitigation {
+    margin-top: 0.65rem !important;
+  }
+
+  .card ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--ink-muted);
+  }
+</style>

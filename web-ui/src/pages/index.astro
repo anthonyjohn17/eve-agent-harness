@@ -1,0 +1,283 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import ArchitectureDiagram from "../components/ui/ArchitectureDiagram.astro";
+import CodeBlock from "../components/ui/CodeBlock.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
+import StatusBadge from "../components/ui/StatusBadge.astro";
+import AnalystDemo from "../components/demo/AnalystDemo";
+import { capabilities, comparisons } from "../data/capabilities";
+import { agents } from "../data/agents";
+import { quickStarts, requirements } from "../data/safety";
+import { site } from "../data/site";
+
+const base = import.meta.env.BASE_URL;
+function withBase(path: string) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (base === "/") return normalized;
+  return `${base.replace(/\/$/, "")}${normalized}`;
+}
+
+const highlights = capabilities.filter((c) =>
+  ["filesystem", "compiler", "hitl", "sandbox", "evals", "channels"].includes(
+    c.id,
+  ),
+);
+---
+
+<SiteLayout>
+  <section class="hero feather-panel">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Eve Agent Harness</p>
+        <h1>{site.tagline}</h1>
+        <p class="lede">
+          {site.description} Drop a tool into <span class="mono">tools/</span>,
+          a skill into <span class="mono">skills/</span>, a subagent into
+          <span class="mono">subagents/</span>. Discovery and compilation wire
+          them — no central registry.
+        </p>
+        <p class="thesis">
+          <strong>{site.thesis}</strong>
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={withBase("/get-started/")}>Get started</a>
+          <a class="btn btn-secondary" href={withBase("/eve-analyst/")}>Explore eve-analyst</a>
+          <a class="btn btn-ghost" href={site.repo.url} rel="noopener noreferrer">View on GitHub</a>
+        </div>
+        <ul class="req-list">
+          {requirements.map((r) => <li>{r}</li>)}
+        </ul>
+      </div>
+      <div class="hero-aside">
+        <CodeBlock code={quickStarts.analyst} label="One-command demo" />
+        <p class="aside-note">
+          Maintained by
+          <a href={site.maintainer.url} rel="noopener noreferrer">{site.maintainer.name}</a>.
+          Framework name is always <span class="mono">eve</span>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Authoring is a folder tree"
+        description="That tree is the pitch. The runtime compiles it into durable sessions with tools, channels, sandbox, and HITL."
+      />
+      <ArchitectureDiagram />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Production primitives as slots"
+        description="Implemented today in the eve framework and exercised by eve-analyst. Roadmap items stay labeled."
+      >
+        <a class="btn btn-secondary" href={withBase("/capabilities/")}>Full matrix</a>
+      </SectionHeader>
+      <div class="grid-3">
+        {
+          highlights.map((cap) => (
+            <article class="card layered">
+              <div class="card-top">
+                <StatusBadge status={cap.status} />
+              </div>
+              <h3>{cap.name}</h3>
+              <p>{cap.summary}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Try the simulated analyst walkthrough"
+        description="Schema → revenue rules → approval → sandbox → investigator → write refusal. Same scenarios as the live demo script."
+      />
+      <AnalystDemo client:load />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="Reference agents"
+        description="The analyst is the full reference. The gallery gives smaller starting points for other domains."
+      >
+        <a class="btn btn-secondary" href={withBase("/gallery/")}>Open gallery</a>
+      </SectionHeader>
+      <div class="grid-2">
+        {
+          agents.map((agent) => (
+            <article class="card">
+              <p class="eyebrow">{agent.scope === "flagship" ? "Flagship" : "Gallery"}</p>
+              <h3 class="mono">{agent.name}</h3>
+              <p>{agent.summary}</p>
+              <p class="path mono">{agent.path}</p>
+              <div class="btn-row">
+                <a
+                  class="btn btn-secondary"
+                  href={withBase(agent.scope === "flagship" ? "/eve-analyst/" : "/gallery/")}
+                >
+                  Details
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        title="How this compares"
+        description="Not trying to replace every agent SDK — filesystem convention + compiler + production primitives."
+      />
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Best at</th>
+              <th>Difference here</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              comparisons.map((row) => (
+                <tr>
+                  <td><strong>{row.name}</strong></td>
+                  <td>{row.bestAt}</td>
+                  <td>{row.difference}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container cta-band card layered feather-panel">
+      <p class="eyebrow">Next step</p>
+      <h2>Ship an agent you can inspect like a normal repo</h2>
+      <p>
+        Clone the harness, run the analyst demo, or scaffold with
+        <span class="mono">npx eve@latest init</span>. Read
+        <a href={site.docs.eve} rel="noopener noreferrer">eve.dev/docs</a> for
+        the installed package reference.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={withBase("/get-started/")}>Quick starts</a>
+        <a class="btn btn-secondary" href={withBase("/safety-roadmap/")}>Safety & roadmap</a>
+      </div>
+      <p class="aside-note">{site.versionNote}</p>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .hero {
+    padding: clamp(2.75rem, 7vw, 5rem) 0 clamp(2rem, 4vw, 3rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .hero h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: var(--syrah-deep);
+  }
+
+  .lede {
+    margin: 0 0 1rem;
+    font-size: clamp(1.08rem, 2vw, 1.28rem);
+    color: var(--ink-muted);
+    max-width: 40rem;
+  }
+
+  .thesis {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-left: 4px solid var(--syrah);
+    background: color-mix(in srgb, var(--blue-glow) 28%, white);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    color: var(--ink);
+  }
+
+  .req-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+  }
+
+  .req-list li {
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: white;
+    border: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  .hero-aside {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .aside-note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-faint);
+  }
+
+  .card-top {
+    margin-bottom: 0.75rem;
+  }
+
+  .path {
+    margin: 0.85rem 0 0;
+    font-size: 0.85rem;
+    color: var(--syrah);
+  }
+
+  .cta-band {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .cta-band h2 {
+    margin: 0 0 0.65rem;
+    color: var(--syrah-deep);
+    letter-spacing: -0.02em;
+  }
+
+  .cta-band > p {
+    margin: 0;
+    color: var(--ink-muted);
+    max-width: 42rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
