@@ -1,7 +1,9 @@
 # Vercel’s Eve AI Agent Framework 🧠⚙️
 
-> **Note:** This file is background research notes kept for context.  
-> It is not the product specification. Prefer `[README.md](./README.md)`,  `[docs/FRAMEWORK_SPEC.md](./docs/FRAMEWORK_SPEC.md)`, and  `[docs/AGENT_CONVENTION.md](./docs/AGENT_CONVENTION.md)`.
+> **Note:** This file is background research / video notes kept for context.
+> It is not the product specification. Prefer [`README.md`](./README.md),
+> [`docs/FRAMEWORK_SPEC.md`](./docs/FRAMEWORK_SPEC.md), and
+> [`docs/AGENT_CONVENTION.md`](./docs/AGENT_CONVENTION.md).
 
 **Eve**, a newly released **open-source AI agent framework by Vercel**. Eve is a important step forward in how production-grade AI agents are structured, built, deployed, and scaled.
 
