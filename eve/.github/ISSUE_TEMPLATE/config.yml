@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/anthonyjohn17
+    about: Please report security vulnerabilities privately via the maintainer, not public issues.
+  - name: Documentation
+    url: https://github.com/anthonyjohn17
+    about: Start with the Eve Agent Harness README and docs/ specs in this repository.

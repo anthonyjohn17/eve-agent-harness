@@ -1,0 +1,14 @@
+Eve Agent Harness
+Copyright 2026 John Anthony
+
+This distribution includes software derived from the upstream open-source
+"eve" project (https://github.com/vercel/eve), licensed under the Apache
+License, Version 2.0.
+
+Upstream project: eve
+Upstream copyright holders: Vercel, Inc. and contributors
+Upstream license: Apache License 2.0 (see LICENSE)
+
+This NOTICE file is provided for Apache License 2.0 compliance. Additional
+notices for third-party components may appear in dependency license files
+shipped with those packages.
