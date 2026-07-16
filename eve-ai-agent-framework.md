@@ -1,9 +1,7 @@
 # Vercel’s Eve AI Agent Framework 🧠⚙️
 
-> **Note:** This file is background research / video notes kept for context.
-> It is not the product specification. Prefer [`README.md`](./README.md),
-> [`docs/FRAMEWORK_SPEC.md`](./docs/FRAMEWORK_SPEC.md), and
-> [`docs/AGENT_CONVENTION.md`](./docs/AGENT_CONVENTION.md).
+> **Note:** This file is background research notes kept for context.  
+> It is not the product specification. Prefer `[README.md](./README.md)`,  `[docs/FRAMEWORK_SPEC.md](./docs/FRAMEWORK_SPEC.md)`, and  `[docs/AGENT_CONVENTION.md](./docs/AGENT_CONVENTION.md)`.
 
 **Eve**, a newly released **open-source AI agent framework by Vercel**. Eve is a important step forward in how production-grade AI agents are structured, built, deployed, and scaled.
 
@@ -39,8 +37,6 @@ This is what makes Eve notable. It takes something that has historically been li
 
 ---
 
-
-
 ## “Your AI Agent Is Just a Folder”
 
 This simple mental model is central:
@@ -72,8 +68,6 @@ The value of this structure is **composability**. Each primitive gets its own pl
 
 ---
 
-
-
 ## Eve's Value Prop
 
 Eve caught attention because many organizations are already building similar structures internally.
@@ -87,7 +81,7 @@ In many companies, teams are designing their own custom folder conventions for a
 - one place for tools,
 - one place for integrations.
 
-But these internal systems are usually idiosyncratic. Each organization has its own way of structuring things.
+But since these internal systems are usually idiosyncratic, each organization has its own way of structuring things.
 
 Eve’s importance is that it may provide a **standardized version** of this architecture.
 
@@ -104,6 +98,8 @@ This matters because standards allow people to:
 Eve is explicitly framed as part of the broader industry movement toward standards, mentioning examples like **MCP**, **A2A**, and **OKF**.
 
 ---
+
+
 
 ## Eve’s Compilation Step Is the Most Impressive Part
 
